@@ -12,21 +12,22 @@ const int i2cSlaveAddress = 0x08;
 volatile long tipsCount = 0;
 
 // interrupt routine to detect rain gauge tips
-void bucketTipIsr() {
+void bucketTipIsr()
+{
   tipsCount++;
-  
 }
 
 // i2c routine to report tips counter status
-void i2cRequestIsr() {
+void i2cRequestIsr()
+{
   wireWriteData(tipsCount);
   Serial.print("Telemetry request.  ");
   Serial.print(tipsCount);
   Serial.println(" reported to  Master.");
-
 }
 
-void setup() {
+void setup()
+{
 
   clock_prescale_set(clock_div_2); // reduce clock speed to 8 MHz
 
@@ -48,11 +49,12 @@ void setup() {
   Serial.println("Wake up, Neo!");
 }
 
-void loop() {
- 
- Serial.println("Spink!");
- delay(200);
+void loop()
+{
+
+  Serial.println("Spink!");
+  delay(200);
   Serial.flush();
- // enter sleep monde
- LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF); 
+  // enter sleep monde
+  LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
 }
