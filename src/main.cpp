@@ -45,8 +45,7 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(3), bucketTipIsr, FALLING);
 
   // initialize serial line
-  Serial.begin(115200);
-  Serial.println("Wake up, Neo!");
+  Serial.begin(115200); // monitor speed is 57600 bps due to reduced clock speed
 }
 
 void loop()
