@@ -37,7 +37,6 @@ void setup()
 
   // init i2c as slave unit
   Wire.begin(i2cSlaveAddress);
-  Wire.setClock(10000L);
   Wire.onRequest(i2cRequestIsr);
 
   // enable external interrupts to count bucket tips
@@ -50,7 +49,8 @@ void setup()
 
 void loop()
 {
-
+  Serial print("Tick count: ");
+  Serial.println(tipsCount);
   Serial.println("Spink!");
   delay(200);
   Serial.flush();
