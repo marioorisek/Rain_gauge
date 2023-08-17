@@ -11,10 +11,30 @@ const int i2cSlaveAddress = 0x08;
 // bucket tips counter
 volatile long tipsCount = 0;
 
-// interrupt routine to detect rain gauge tips
-void bucketTipIsr()
+// previous bucket state
+volatile bool stateEven = false;
+volatile bool stateOdd = false;
+
+// interrupt routine to detect rain gauge tips with debounce
+void bucketTipIsrEven()
 {
-  tipsCount++;
+  if (!stateEven)
+  {
+    stateEven = true;
+    stateOdd = false;
+    tipsCount++;
+  }
+}
+
+// interrupt routine to detect rain gauge tips with debounce
+void bucketTipIsrOdd()
+{
+  if (!stateOdd)
+  {
+    stateOdd = true;
+    stateEven = false;
+    tipsCount++;
+  }
 }
 
 // i2c routine to report tips counter status
@@ -40,8 +60,8 @@ void setup()
   Wire.onRequest(i2cRequestIsr);
 
   // enable external interrupts to count bucket tips
-  attachInterrupt(digitalPinToInterrupt(2), bucketTipIsr, FALLING);
-  attachInterrupt(digitalPinToInterrupt(3), bucketTipIsr, FALLING);
+  attachInterrupt(digitalPinToInterrupt(2), bucketTipIsrEven, FALLING);
+  attachInterrupt(digitalPinToInterrupt(3), bucketTipIsrOdd, FALLING);
 
   // initialize serial line
   Serial.begin(115200); // monitor speed is 57600 bps due to reduced clock speed
@@ -49,7 +69,7 @@ void setup()
 
 void loop()
 {
-  Serial print("Tick count: ");
+  Serial.print("Tick count: ");
   Serial.println(tipsCount);
   Serial.println("Spink!");
   delay(200);
